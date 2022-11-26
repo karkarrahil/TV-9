@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react'
 import NewsItem from './NewsItem'
 
 
-function News({ category, title }) {
+
+function News({ category, title,setProgress,API_KEY}) {
     const [item, setItem] = useState([])
     const [page, setPage] = useState(1)
     useEffect(() => {
         let url = `
-    https://newsapi.org/v2/top-headlines?country=in&category=${category}&apiKey=242a67bcdf694bccbdeba380b3538a78&page=${page}`;
+    https://newsapi.org/v2/top-headlines?country=in&category=${category}&apiKey=${API_KEY}&page=${page}`;
         // let Data = await fetch(url);
         // let NewsData = await Data.json().catch((err)=>console.log('it is falidation'));
         // console.log(NewsData);
@@ -15,33 +16,40 @@ function News({ category, title }) {
 
         fetch(url)
             .then((Data) => {
+                setProgress(10)
                 return Data.json();
             })
             .then((data) => {
+                setProgress(50);
                 return setItem(
                     data.articles
-                );
+                    );
 
-            })
-            .catch((err) => {
-                console.log("sorry failed to fetch data");
-            });
-         
-        console.log("page", page);
-    }, [page, category])
+                },
+                )
+                .catch((err) => {
+                    console.log("sorry failed to fetch data");
+                });
+                
+                
+            }, [page, category,setProgress,API_KEY])
+           setTimeout(() => {
+            setProgress(100);
+           }, 1000.5);
 
     const nextPage = async () => {
         setPage(page + 1);
         let url = `
-        https://newsapi.org/v2/top-headlines?country=in&category=${category}&apiKey=242a67bcdf694bccbdeba380b3538a78&page=${page}`;
+        https://newsapi.org/v2/top-headlines?country=in&category=${category}&apiKey=${API_KEY}&page=${page}`;
         let Data = await fetch(url);
         let data = await Data.json();
+        
         setItem(data.articles)
     }
     const previousPage = async () => {
         setPage(page - 1);
         let url = `
-        https://newsapi.org/v2/top-headlines?country=in&category=${category}&apiKey=242a67bcdf694bccbdeba380b3538a78&page=${page}`;
+        https://newsapi.org/v2/top-headlines?country=in&category=${category}&apiKey=${API_KEY}&page=${page}`;
         let Data = await fetch(url);
         let data = await Data.json();
         setItem(data.articles)
